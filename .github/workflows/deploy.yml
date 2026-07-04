@@ -1,1 +1,18 @@
-Name: Deploy to local VM
+on:
+  push:
+    branches:
+    - main
+
+
+jobs:
+  deploy:
+    name: deploy of code to VM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Copy index.html to VM
+        run: scp -o StrictHostKeyChecking=no index.html root@192.168.1.17:/var/www/html/index.html
+      - name: Restart Nginx
+        run: ssh root@192.168.1.17 "sudo systemctl restart nginx"
+    
